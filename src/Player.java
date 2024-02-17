@@ -67,14 +67,12 @@ public class Player {
 
     public int checkCards(String rank) {
         for (int i = 0; i < hand.size(); i++) {
-            //TODO gegt suit
             if (hand.get(i).getRank().equals(rank)) {
                 return i;
             }
         }
         return -1;
     }
-
 
     public int handSize() {
         return hand.size();
@@ -83,7 +81,6 @@ public class Player {
     public void addCard(Card otherCard) {
         hand.add(otherCard);
     }
-
 
     public String toString() {
         return name + "has" + points + "points\n" + name + "'s cards:"

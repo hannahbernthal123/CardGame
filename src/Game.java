@@ -4,17 +4,22 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Game {
+    // These are the instance variables.
+
+    // These instance variables that control data sharing.
     private Deck deck;
-    private Player p1;
-    private Player p2;
-    private int turn;
-    private boolean isItGoFish;
-    private String winner;
     private CardGameView window;
     private Player currentPlayer;
     private Player opposingPlayer;
+    private Player p1;
+    private Player p2;
+
+    // These are the instance variables with types I did not create (used to track different things).
+    private int turn;
+    private String winner;
     private String currentState;
     private Scanner newObject;
+    private boolean isItGoFish;
     private boolean gameOver;
 
     public Game() {
@@ -22,18 +27,19 @@ public class Game {
         String[] rank = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
         String[] suit = {"Spades", "Hearts", "Diamonds", "Clubs"};
 
-        // This sets the turn to Player one's turn.
-        turn = 1;
-        gameOver = false;
 
         // This initializes a new deck, passing in the two String arrays and a point value of 0.
         deck = new Deck(rank, suit, 0);
 
+        // This sets up the tracking instance variables to be on the correct setting at the start of the game.
+        turn = 1;
+        gameOver = false;
         isItGoFish = false;
         winner = "";
         currentState = "instructions";
         window = new CardGameView(this);
 
+        // These take in the two player's names.
         newObject = new Scanner(System.in);
         System.out.println("Player 1, enter your name: ");
         String name1 = newObject.nextLine();
@@ -41,32 +47,35 @@ public class Game {
         System.out.println("Player 2, enter your name: ");
         String name2 = newObject.nextLine();
 
-        // These are the instance variables.
-        /// This initializes the two players.
-//        p1 = new Player(name1);
-//        p2 = new Player(name2);
-//        currentPlayer = p1;
-//        opposingPlayer = p2;
-
-//        Use this to test a win.
-        ArrayList<Card> hand1 = new ArrayList<Card>();
-        ArrayList<Card> hand2 = new ArrayList<Card>();
-        Card hello = new Card( "hearts","3", 0, new ImageIcon("Resources/Cards/10.png").getImage());
-        Card hi = new Card( "spades","3", 0, new ImageIcon("Resources/Cards/9.png").getImage());
-        Card what = new Card( "clubs","3", 0, new ImageIcon("Resources/Cards/12.png").getImage());
-        Card you = new Card( "diamonds","3", 0, new ImageIcon("Resources/Cards/11.png").getImage());
-
-        hand1.add(hello);
-        hand1.add(hi);
-        hand1.add(what);
-        hand2.add(you);
-
-        p1 = new Player(name1, hand1);
-        p2 = new Player(name2, hand2);
+        // This initializes the two players.
+        p1 = new Player(name1);
+        p2 = new Player(name2);
         currentPlayer = p1;
         opposingPlayer = p2;
+
+//        You can use this to test a win.
+//        ArrayList<Card> hand1 = new ArrayList<Card>();
+//        ArrayList<Card> hand2 = new ArrayList<Card>();
+//        Card hello = new Card( "hearts","3", 0, new ImageIcon("Resources/Cards/10.png").getImage());
+//        Card hi = new Card( "spades","3", 0, new ImageIcon("Resources/Cards/9.png").getImage());
+//        Card what = new Card( "clubs","3", 0, new ImageIcon("Resources/Cards/12.png").getImage());
+//        Card you = new Card( "diamonds","3", 0, new ImageIcon("Resources/Cards/11.png").getImage());
+//        Card how = new Card( "diamonds","10", 0, new ImageIcon("Resources/Cards/39.png").getImage());
+//
+//        hand1.add(hello);
+//        hand1.add(hi);
+//        hand1.add(what);
+//        hand2.add(you);
+//        hand2.add(how);
+//
+//        p1 = new Player(name1, hand1);
+//        p2 = new Player(name2, hand2);
+//        currentPlayer = p1;
+//        opposingPlayer = p2;
     }
 
+
+    // These are the getters.
     public boolean getFishingTime() {
         return isItGoFish;
     }
@@ -77,6 +86,17 @@ public class Game {
 
     public String getWinner() {
         return winner;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Player getOpposingPlayer() {
+        return opposingPlayer;
+    }
+    public String getCurrentState() {
+        return currentState;
     }
 
     public boolean isGameOver() {
@@ -92,19 +112,18 @@ public class Game {
         }
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
+    // This method deals out 5 random cards to player 1 and 2.
+    public void dealCards() {
+        for (int i = 0; i < 5; i++)
+        {
+            p1.addCard(deck.deal());
+            p2.addCard(deck.deal());
+        }
     }
 
-    public Player getOpposingPlayer() {
-        return opposingPlayer;
-    }
-    public String getCurrentState() {
-        return currentState;
-    }
-
+    // This method return whether or not it is fishing time based on the cards of the other opponent and the current player's request.
     public boolean fishingTime() {
-        // Then, this part of the method takes in the String that the player is requested and checks it against the other player's deck.
+        // This part of the method takes in the String that the player is requested and checks it against the other player's deck.
         String request = request();
         if (opposingPlayer.checkCards(request) != -1) {
             // If the other player does have the card (method does not return -1) the other player gives the card to the current player.
@@ -115,16 +134,18 @@ public class Game {
             return false;
         }
         else {
-            currentPlayer.checkTrick();
-            // If the other player does not have the requested card, they are dealt a random card from the deck.
+            // If the other player does not have the requested card, the current player is dealt a random card from the deck.
             currentPlayer.addCard(deck.deal());
             System.out.println("Go Fish!");
+            // Then, it checks the trick to see if the current player has a set of 4.
+            currentPlayer.checkTrick();
             isItGoFish = true;
             window.repaint();
             return true;
         }
     }
 
+    // This method switches the turn and the current players to prepare for the next turn.
     public void switchCurrentPlayer() {
         if (turn == 1)
         {
@@ -155,21 +176,25 @@ public class Game {
         fishingTime();
     }
 
+    // This is the request method, it takes in user input of what they want to request and returns it as a String.
     public String request() {
         System.out.println("What would you like to request?");
         String requestedCard = newObject.nextLine();
         return requestedCard;
     }
 
-    public Card take(int other, ArrayList<Card> hand) {
-        return hand.remove(other);
+    // This method takes in an index and removes it from the given hand of cards.
+    public Card take(int index, ArrayList<Card> hand) {
+        return hand.remove(index);
     }
 
+    // This method plays the game continuously.
     public void play() {
+        // This String is created to ensure that the player is ready to move on before starting the next turn.
         String s;
-        //dealCards();
+        dealCards();
 
-        // Runs a turn while both players still have cards.
+        // This keeps the game going while both people still have cards.
         while (p1.handSize() > 0 && p2.handSize() > 0)
         {
             s = newObject.nextLine();
@@ -180,6 +205,7 @@ public class Game {
                 playTurn();
             }
         }
+        // After a player has 0 cards, it sets the Person winner to the player with more points and sets gameOver to true.
         winner = checkPoints(p1, p2);
         gameOver = true;
         window.repaint();
@@ -196,21 +222,12 @@ public class Game {
         }
     }
 
-    public void dealCards() {
-        for (int i = 0; i < 5; i++)
-        {
-            p1.addCard(deck.deal());
-            p2.addCard(deck.deal());
-        }
-    }
-
+    // This method prints the instructions.
     public static void printInstructions() {
-        System.out.println("Instructions: \nThe goal of the game is to get the most points. You get points by getting a " +
-                "4 of a kind. Keep playing until someone runs out of cards!");
+        System.out.println("Instructions: \nThe goal of the game is to get a set of 4. See who can get it first!");
         System.out.println("1. Player 1 asks Player 2 for a card of their choice\n2. Player 2 gives them the card if " +
                 "they have it, if not, they said 'GO FISH!'\n3. Player 1 recieves the new card (either from Player 2 or " +
-                "from the deck\n4. If a player gets 4 of a kind, those are removed from their deck and gets a point\n5. " +
-                "When someone runs out of cards, whoever has the most points wins!");
+                "from the deck\n4. If a player gets 4 of a kind, those are removed from their deck and they win!");
     }
 
     public static void main(String[] args) {
