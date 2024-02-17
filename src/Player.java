@@ -65,9 +65,9 @@ public class Player {
     }
 
 
-    public int checkCards(String other) {
+    public int checkCards(String rank) {
         for (int i = 0; i < hand.size(); i++) {
-            if (hand.get(i).getRank().equals(other)) {
+            if (hand.get(i).getRank().equals(rank)) {
                 return i;
             }
         }
@@ -82,7 +82,6 @@ public class Player {
     public void addCard(Card otherCard) {
         hand.add(otherCard);
     }
-
 
 
     public String toString() {

@@ -1,4 +1,6 @@
 // Hannah - 2023
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Deck {
@@ -7,12 +9,16 @@ public class Deck {
 
     // This is the deck constructor taking in an array of ranks, array of suits, and a point value.
     public Deck(String[] rank, String[] suit, int point) {
-        for (String currentSuit : suit) {
-            for (int j = 0; j < rank.length; j++) {
-                Card tempCard = new Card(rank[j], currentSuit, 0);
+        int count = 1;
+        for (int i = 0; i < rank.length; i++) {
+            for (int j = 0; j < suit.length; j++) {
+                Card tempCard = new Card(suit[j], rank[i], 0, new ImageIcon("Resources/Cards/" + Integer.toString(count) + ".png").getImage());
                 cards.add(tempCard);
+                count++;
             }
         }
+
+        int a = 1;
         shuffle();
         cardsLeft = cards.size();
     }

@@ -1,4 +1,5 @@
 // Hannah - 2023
+import javax.swing.*;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -7,93 +8,150 @@ public class Game {
     private Player p1;
     private Player p2;
     private int turn;
+    private boolean isItGoFish;
+    private String winner;
+    private CardGameView window;
+    private Player currentPlayer;
+    private Player opposingPlayer;
+    private String currentState;
+    private Scanner newObject;
 
     public Game() {
         // This sets up two String arrays for the accepted ranks and suits.
-        String[] rank = {"A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-        String[] suit = {"Hearts", "Spades", "Diamonds", "Clubs"};
-
-        Scanner newObject = new Scanner(System.in);
-        System.out.println("Player 1, enter your name: ");
-        String name1 = newObject.nextLine();
-
-        System.out.println("Player 2, enter your name: ");
-        String name2 = newObject.nextLine();
-
-        p1 = new Player(name1);
-        p2 = new Player(name2);
-
-//        ArrayList<Card> hand1 = new ArrayList<Card>();
-//        ArrayList<Card> hand2 = new ArrayList<Card>();
-//        Card hello = new Card( "3","hearts", 0);
-//        Card hi = new Card( "3","spades", 0);
-//        Card what = new Card( "3","clubs", 0);
-//        Card you = new Card( "3","diamonds", 0);
-//
-//        hand1.add(hello);
-//        hand1.add(hi);
-//        hand1.add(what);
-//        hand2.add(you);
-
-//        p1 = new Player(name1, hand1);
-//        p2 = new Player(name2, hand2);
+        String[] rank = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[] suit = {"Spades", "Hearts", "Diamonds", "Clubs"};
 
         // This sets the turn to Player one's turn.
         turn = 1;
 
         // This initializes a new deck, passing in the two String arrays and a point value of 0.
         deck = new Deck(rank, suit, 0);
+
+        isItGoFish = false;
+        winner = "";
+        currentState = "instructions";
+        window = new CardGameView(this);
+
+        newObject = new Scanner(System.in);
+        System.out.println("Player 1, enter your name: ");
+        String name1 = newObject.nextLine();
+
+        System.out.println("Player 2, enter your name: ");
+        String name2 = newObject.nextLine();
+
+        // These are the instance variables.
+        /// This initializes the two players.
+        p1 = new Player(name1);
+        p2 = new Player(name2);
+        currentPlayer = p1;
+        opposingPlayer = p2;
+
+//        Use this to test a win.
+//        ArrayList<Card> hand1 = new ArrayList<Card>();
+//        ArrayList<Card> hand2 = new ArrayList<Card>();
+//        Card hello = new Card( "3","hearts", 0, new ImageIcon("Resources/Cards/10.png").getImage());
+//        Card hi = new Card( "3","spades", 0, new ImageIcon("Resources/Cards/9.png").getImage());
+//        Card what = new Card( "3","clubs", 0, new ImageIcon("Resources/Cards/12.png").getImage());
+//        Card you = new Card( "3","diamonds", 0, new ImageIcon("Resources/Cards/11.png").getImage());
+//
+//        hand1.add(hello);
+//        hand1.add(hi);
+//        hand1.add(what);
+//        hand2.add(you);
+//
+//        p1 = new Player(name1, hand1);
+//        p2 = new Player(name2, hand2);
     }
 
-    public static void main(String[] args) {
-        Game.printInstructions();
-        Game myGame = new Game();
-        myGame.play();
+    public boolean getFishingTime() {
+        return isItGoFish;
     }
 
-    // PlayTurn is meant to start each turn.
-    // It first establishes which player's turn it is and then it displays who's turn it is and their hand.
-    public void playTurn() {
-        Player currentPlayer;
-        Player opp;
-        if (turn == 1)
-        {
-            currentPlayer = p1;
-            opp = p2;
-            turn = 2;
+    public int getTurn() {
+        return turn;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public String getPlayerName(int turn) {
+        if (turn == 1) {
+            return p1.getName();
         }
         else {
-            currentPlayer = p2;
-            opp = p1;
-            turn = 1;
+            return p2.getName();
         }
+    }
 
-        System.out.print("-----------------------------------------------\n");
-        System.out.print("It is " + currentPlayer.getName() + "'s turn. \n");
-        System.out.print("Your current hand is:\n ");
-        currentPlayer.printHand();
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
+    public Player getOpposingPlayer() {
+        return opposingPlayer;
+    }
+    public String getCurrentState() {
+        return currentState;
+    }
 
+    public boolean fishingTime() {
         // Then, this part of the method takes in the String that the player is requested and checks it against the other player's deck.
         String request = request();
-        if (opp.checkCards(request) != -1) {
+        //TODO this is never true
+        if (opposingPlayer.checkCards(request) != -1) {
             // If the other player does have the card (method does not return -1) the other player gives the card to the current player.
-            currentPlayer.addCard(take(opp.checkCards(request), opp.getHand()));
+            currentPlayer.addCard(take(opposingPlayer.checkCards(request), opposingPlayer.getHand()));
             // Then, it checks the trick to see if the current player has a set of 4.
             currentPlayer.checkTrick();
+            isItGoFish = false;
+            return false;
         }
         else {
             currentPlayer.checkTrick();
             // If the other player does not have the requested card, they are dealt a random card from the deck.
             currentPlayer.addCard(deck.deal());
             System.out.println("Go Fish!");
+            isItGoFish = true;
+            window.repaint();
+            return true;
         }
+    }
 
+    public void switchCurrentPlayer() {
+        if (turn == 1)
+        {
+            currentPlayer = p2;
+            opposingPlayer = p1;
+            turn = 2;
+        }
+        else {
+            currentPlayer = p1;
+            opposingPlayer = p2;
+            turn = 1;
+        }
+    }
+
+    // PlayTurn is meant to start each turn.
+    // It first establishes which player's turn it is and then it displays who's turn it is and their hand.
+    public void playTurn() {
+        window.repaint();
+        currentState = "printHand";
+        System.out.print("-----------------------------------------------\n");
+        System.out.print("It is " + currentPlayer.getName() + "'s turn. \n");
+        System.out.print("Your current hand is:\n ");
+
+        // This prints out the current players hand.
+        currentPlayer.printHand();
+
+        // Checks if the other player has the card.
+        if (fishingTime() == true) {
+            currentState = "goFish";
+        }
     }
 
     public String request() {
         System.out.println("What would you like to request?");
-        Scanner newObject = new Scanner(System.in);
         String requestedCard = newObject.nextLine();
         return requestedCard;
     }
@@ -103,16 +161,25 @@ public class Game {
     }
 
     public void play() {
+        String s;
         dealCards();
 
         // Runs a turn while both players still have cards.
         while (p1.handSize() > 0 && p2.handSize() > 0)
         {
-            playTurn();
+            s = newObject.nextLine();
+            if (s != null) {
+                isItGoFish = false;
+                switchCurrentPlayer();
+                window.repaint();
+                playTurn();
+            }
         }
 
         // Once one of the players runs out of cards it checks which has more points and prints the winner.
         System.out.println(checkPoints(p1, p2) + " IS THE WINNER!");
+        currentState = "win";
+        winner = checkPoints(p1, p2);
     }
 
     // This method checks which player has more points.
@@ -123,7 +190,6 @@ public class Game {
         else {
             return person2.getName();
         }
-
     }
 
     public void dealCards() {
@@ -141,5 +207,11 @@ public class Game {
                 "they have it, if not, they said 'GO FISH!'\n3. Player 1 recieves the new card (either from Player 2 or " +
                 "from the deck\n4. If a player gets 4 of a kind, those are removed from their deck and gets a point\n5. " +
                 "When someone runs out of cards, whoever has the most points wins!");
+    }
+
+    public static void main(String[] args) {
+        Game.printInstructions();
+        Game myGame = new Game();
+        myGame.play();
     }
 }
