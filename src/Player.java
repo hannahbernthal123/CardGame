@@ -67,6 +67,7 @@ public class Player {
 
     public int checkCards(String rank) {
         for (int i = 0; i < hand.size(); i++) {
+            //TODO gegt suit
             if (hand.get(i).getRank().equals(rank)) {
                 return i;
             }

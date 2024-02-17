@@ -41,26 +41,28 @@ public class Game {
 
         // These are the instance variables.
         /// This initializes the two players.
-        p1 = new Player(name1);
-        p2 = new Player(name2);
-        currentPlayer = p1;
-        opposingPlayer = p2;
+//        p1 = new Player(name1);
+//        p2 = new Player(name2);
+//        currentPlayer = p1;
+//        opposingPlayer = p2;
 
 //        Use this to test a win.
-//        ArrayList<Card> hand1 = new ArrayList<Card>();
-//        ArrayList<Card> hand2 = new ArrayList<Card>();
-//        Card hello = new Card( "3","hearts", 0, new ImageIcon("Resources/Cards/10.png").getImage());
-//        Card hi = new Card( "3","spades", 0, new ImageIcon("Resources/Cards/9.png").getImage());
-//        Card what = new Card( "3","clubs", 0, new ImageIcon("Resources/Cards/12.png").getImage());
-//        Card you = new Card( "3","diamonds", 0, new ImageIcon("Resources/Cards/11.png").getImage());
-//
-//        hand1.add(hello);
-//        hand1.add(hi);
-//        hand1.add(what);
-//        hand2.add(you);
-//
-//        p1 = new Player(name1, hand1);
-//        p2 = new Player(name2, hand2);
+        ArrayList<Card> hand1 = new ArrayList<Card>();
+        ArrayList<Card> hand2 = new ArrayList<Card>();
+        Card hello = new Card( "hearts","3", 0, new ImageIcon("Resources/Cards/10.png").getImage());
+        Card hi = new Card( "spades","3", 0, new ImageIcon("Resources/Cards/9.png").getImage());
+        Card what = new Card( "clubs","3", 0, new ImageIcon("Resources/Cards/12.png").getImage());
+        Card you = new Card( "diamonds","3", 0, new ImageIcon("Resources/Cards/11.png").getImage());
+
+        hand1.add(hello);
+        hand1.add(hi);
+        hand1.add(what);
+        hand2.add(you);
+
+        p1 = new Player(name1, hand1);
+        p2 = new Player(name2, hand2);
+        currentPlayer = p1;
+        opposingPlayer = p2;
     }
 
     public boolean getFishingTime() {
@@ -95,10 +97,11 @@ public class Game {
         return currentState;
     }
 
+
+    //TODO why is this always returning true
     public boolean fishingTime() {
         // Then, this part of the method takes in the String that the player is requested and checks it against the other player's deck.
         String request = request();
-        //TODO this is never true
         if (opposingPlayer.checkCards(request) != -1) {
             // If the other player does have the card (method does not return -1) the other player gives the card to the current player.
             currentPlayer.addCard(take(opposingPlayer.checkCards(request), opposingPlayer.getHand()));
@@ -145,9 +148,7 @@ public class Game {
         currentPlayer.printHand();
 
         // Checks if the other player has the card.
-        if (fishingTime() == true) {
-            currentState = "goFish";
-        }
+        fishingTime();
     }
 
     public String request() {

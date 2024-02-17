@@ -14,7 +14,7 @@ public class Card {
 
 
     // This is the card constructor that takes in each card's rank, suit, and point value.
-    public Card(String myRank, String mySuit, int myPoint, Image image) {
+    public Card(String mySuit, String myRank, int myPoint, Image image) {
         rank = myRank;
         suit = mySuit;
         point = myPoint;
@@ -58,7 +58,7 @@ public class Card {
 
     // This toString method returns a String in the form of "10 of hearts".
     public String toString() {
-        return suit + " of " + rank;
+        return rank + " of " + suit;
     }
 
     public void draw(Graphics g, int x) {
