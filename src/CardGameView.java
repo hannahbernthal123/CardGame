@@ -48,15 +48,25 @@ public class CardGameView extends JFrame {
                 g.setFont(new Font("font1", Font.ITALIC, 60));
                 g.drawString("Go Fish!", 100, 450);
             }
+
+            if (game.isGameOver() == true) {
+                if ((game.getWinner().equals(game.getPlayerName(1))) || (game.getWinner().equals(game.getPlayerName(2)))) {
+                    g.setColor(Color.WHITE);
+                    g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+                    g.setColor(Color.PINK);
+                    g.setFont(new Font("font1", Font.ITALIC, 40));
+                    g.drawString(game.getWinner() + " wins!", 200, 200);
+                }
+            }
         }
 
         // Step 4: if there is a winner, print who wins
-        if (game.getCurrentState().equals("win")) {
-            if ((game.getWinner().equals(game.getPlayerName(1))) || (game.getWinner().equals(game.getPlayerName(2)))) {
-                g.setColor(Color.PINK);
-                g.setFont(new Font("font1", Font.ITALIC, 40));
-                g.drawString(game.getWinner() + " wins!", 200, 200);
-            }
-        }
+//        if (game.getCurrentState().equals("win")) {
+//            if ((game.getWinner().equals(game.getPlayerName(1))) || (game.getWinner().equals(game.getPlayerName(2)))) {
+//                g.setColor(Color.PINK);
+//                g.setFont(new Font("font1", Font.ITALIC, 40));
+//                g.drawString(game.getWinner() + " wins!", 200, 200);
+//            }
+//        }
     }
 }

@@ -17,8 +17,6 @@ public class Deck {
                 count++;
             }
         }
-
-        int a = 1;
         shuffle();
         cardsLeft = cards.size();
     }

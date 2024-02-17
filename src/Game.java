@@ -15,6 +15,7 @@ public class Game {
     private Player opposingPlayer;
     private String currentState;
     private Scanner newObject;
+    private boolean gameOver;
 
     public Game() {
         // This sets up two String arrays for the accepted ranks and suits.
@@ -23,6 +24,7 @@ public class Game {
 
         // This sets the turn to Player one's turn.
         turn = 1;
+        gameOver = false;
 
         // This initializes a new deck, passing in the two String arrays and a point value of 0.
         deck = new Deck(rank, suit, 0);
@@ -77,6 +79,10 @@ public class Game {
         return winner;
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     public String getPlayerName(int turn) {
         if (turn == 1) {
             return p1.getName();
@@ -97,8 +103,6 @@ public class Game {
         return currentState;
     }
 
-
-    //TODO why is this always returning true
     public boolean fishingTime() {
         // Then, this part of the method takes in the String that the player is requested and checks it against the other player's deck.
         String request = request();
@@ -163,7 +167,7 @@ public class Game {
 
     public void play() {
         String s;
-        dealCards();
+        //dealCards();
 
         // Runs a turn while both players still have cards.
         while (p1.handSize() > 0 && p2.handSize() > 0)
@@ -176,11 +180,10 @@ public class Game {
                 playTurn();
             }
         }
-
-        // Once one of the players runs out of cards it checks which has more points and prints the winner.
-        System.out.println(checkPoints(p1, p2) + " IS THE WINNER!");
-        currentState = "win";
         winner = checkPoints(p1, p2);
+        gameOver = true;
+        window.repaint();
+        System.out.println(checkPoints(p1, p2) + " IS THE WINNER!");
     }
 
     // This method checks which player has more points.
