@@ -8,6 +8,7 @@ public class Game {
 
     // These instance variables that control data sharing.
     private Deck deck;
+    private Game myGame;
     private CardGameView window;
     private Player currentPlayer;
     private Player opposingPlayer;
@@ -52,26 +53,6 @@ public class Game {
         p2 = new Player(name2);
         currentPlayer = p1;
         opposingPlayer = p2;
-
-//        You can use this to test a win.
-//        ArrayList<Card> hand1 = new ArrayList<Card>();
-//        ArrayList<Card> hand2 = new ArrayList<Card>();
-//        Card hello = new Card( "hearts","3", 0, new ImageIcon("Resources/Cards/10.png").getImage());
-//        Card hi = new Card( "spades","3", 0, new ImageIcon("Resources/Cards/9.png").getImage());
-//        Card what = new Card( "clubs","3", 0, new ImageIcon("Resources/Cards/12.png").getImage());
-//        Card you = new Card( "diamonds","3", 0, new ImageIcon("Resources/Cards/11.png").getImage());
-//        Card how = new Card( "diamonds","10", 0, new ImageIcon("Resources/Cards/39.png").getImage());
-//
-//        hand1.add(hello);
-//        hand1.add(hi);
-//        hand1.add(what);
-//        hand2.add(you);
-//        hand2.add(how);
-//
-//        p1 = new Player(name1, hand1);
-//        p2 = new Player(name2, hand2);
-//        currentPlayer = p1;
-//        opposingPlayer = p2;
     }
 
 
